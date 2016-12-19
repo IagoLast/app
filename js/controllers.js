@@ -34,6 +34,9 @@ angular.module('app.controllers', [])
 			errorCallback: onError,
 			videoSelector: '#video',
 			stopOnRead: true,
+			facingMode: {
+				exact: 'environment'
+			},
 		});
 
 
