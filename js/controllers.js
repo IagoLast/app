@@ -29,17 +29,25 @@ angular.module('app.controllers', [])
 		function onError(err) {
 			console.error(err);
 		}
-		var qr = new QrReader({
-			sucessCallback: onSuccess,
-			errorCallback: onError,
-			videoSelector: '#video',
-			stopOnRead: true,
-			facingMode: {
-				ideal: 'environment'
-			},
-		});
 
-
+		navigator.mediaDevices.enumerateDevices()
+			.then(function (devices) {
+				devices = devices.filter(function (d) {
+					return d.kind === 'videoinput';
+				});
+				var back = devices.find(function (d) {
+					return d.label.toLowerCase().indexOf('back') !== -1;
+				}) || (devices.length && devices[devices.length - 1]);
+				return back.deviceId;
+			}).then(function (deviceId) {
+				var qr = new QrReader({
+					sucessCallback: onSuccess,
+					errorCallback: onError,
+					videoSelector: '#video',
+					stopOnRead: true,
+					facingMode: deviceId,
+				});
+			});
 	}
 ])
 
